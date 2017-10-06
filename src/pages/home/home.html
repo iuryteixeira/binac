@@ -1,17 +1,27 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home</ion-title>
+    <ion-title>Conversão de Bases</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h2>Welcome to Ionic!</h2>
-  <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+  <h3>Escolha a base de entrada:</h3>
+  <ion-item>
+    <ion-label>Base de Entrada</ion-label>
+    <ion-select [(ngModel)]="selectedOption" cancelText="VOLTAR" okText="OK" (ionChange)="selectClick()" interface="popover">
+      <ion-option value="bin">Binário (2)</ion-option>
+      <ion-option value="oct">Octal (8)</ion-option>
+      <ion-option value="dec">Decimal (10)</ion-option>
+      <ion-option value="hex">Hexa (16)</ion-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-list>
+    <ion-item>
+      <ion-label color="primary" floating>{{labelField}}</ion-label>
+      <ion-input [(ngModel)]="ipNumber" disabled="{{inpState}}" type="text"></ion-input>
+    </ion-item>
+
+  </ion-list>
+
 </ion-content>

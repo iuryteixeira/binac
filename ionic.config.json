@@ -1,5 +1,6 @@
 {
   "name": "binac",
-  "app_id": "",
-  "type": "ionic-angular"
+  "app_id": "f84817cc",
+  "type": "ionic-angular",
+  "integrations": {}
 }
