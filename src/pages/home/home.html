@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content padding>
-  <h3>Escolha a base de entrada:</h3>
+  <h4>Escolha a base de entrada:</h4>
   <ion-item>
     <ion-label>Base de Entrada</ion-label>
     <ion-select [(ngModel)]="selectedOption" cancelText="VOLTAR" okText="OK" (ionChange)="selectClick()" interface="popover">
@@ -19,9 +19,33 @@
   <ion-list>
     <ion-item>
       <ion-label color="primary" floating>{{labelField}}</ion-label>
-      <ion-input [(ngModel)]="ipNumber" disabled="{{inpState}}" type="text"></ion-input>
+      <ion-input [(ngModel)]="textNumber" disabled="{{inpState}}" type="text"></ion-input>
     </ion-item>
 
   </ion-list>
-
+  <button ion-button block (click)="convert()" icon-left>
+      <ion-icon name="calculator"></ion-icon>
+      Converter
+  </button>
+  <ion-list>
+    <ion-list-header>
+      <h1>Resultados</h1>
+    </ion-list-header>
+    <ion-item>
+      <h2>Binário</h2>
+      <h2>{{results?.bin}}</h2>
+    </ion-item>
+    <ion-item>
+      <h2>Octal</h2>
+      <h2>{{results?.oct}}</h2>
+    </ion-item>
+    <ion-item>
+      <h2>Decimal</h2>
+      <h2>{{results?.dec}}</h2>
+    </ion-item>
+    <ion-item>
+      <h2>Hex</h2>
+      <h2>{{results?.hex}}</h2>
+    </ion-item>
+  </ion-list>
 </ion-content>

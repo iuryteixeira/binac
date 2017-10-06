@@ -149,6 +149,7 @@ ContactPage = __decorate([
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HomePage; });
+/* unused harmony export ResultNumbers */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(33);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -179,27 +180,150 @@ var HomePage = (function () {
      * change field label with base in the selection
      */
     HomePage.prototype.changeLabel = function () {
+        this.results = null;
         if (this.selectedOption == 'bin') {
-            this.labelField = "Insira o binário";
+            this.labelField = "Insira o número em base 2";
         }
         if (this.selectedOption == 'oct') {
-            this.labelField = "Insira o octal";
+            this.labelField = "Insira o número em base 8";
         }
         if (this.selectedOption == 'dec') {
-            this.labelField = "Insira o decimal";
+            this.labelField = "Insira o número em base 10";
         }
         if (this.selectedOption == 'hex') {
-            this.labelField = "Insira o hexa";
+            this.labelField = "Insira o número em base 16";
+        }
+        this.textNumber = "";
+    };
+    HomePage.prototype.convert = function () {
+        this.results = new ResultNumbers();
+        var n = this.textNumber;
+        if (this.selectedOption == 'bin') {
+            var decValue = this.numToDec(Number(n), 2);
+            this.results.bin = Number(n);
+            this.results.dec = decValue;
+            this.results.oct = Number(this.decToBase(decValue, 8));
+            this.results.hex = this.decToBase(decValue, 16);
+        }
+        if (this.selectedOption == 'oct') {
+            var decValue = this.numToDec(Number(n), 8);
+            this.results.oct = Number(n);
+            this.results.bin = Number(this.decToBase(decValue, 2));
+            this.results.dec = decValue;
+            this.results.hex = this.decToBase(decValue, 16);
+        }
+        if (this.selectedOption == 'hex') {
+            var decValue = this.numToDec(n, 16);
+            this.results.hex = String(n).toUpperCase();
+            this.results.bin = Number(this.decToBase(decValue, 2));
+            this.results.oct = Number(this.decToBase(decValue, 8));
+            this.results.dec = decValue;
+        }
+        if (this.selectedOption == 'dec') {
+            var vdec = Number(n);
+            this.results.bin = Number(this.decToBase(vdec, 2));
+            this.results.oct = Number(this.decToBase(vdec, 8));
+            this.results.dec = vdec;
+            this.results.hex = this.decToBase(vdec, 16);
+        }
+    };
+    HomePage.prototype.decToBase = function (dec, base) {
+        var result = '';
+        var current = Math.trunc(dec);
+        if (base != 16) {
+            while (current > 0) {
+                result = result + (current % base);
+                current = Math.trunc(current / base);
+            }
+        }
+        else {
+            while (current > 0) {
+                result = result + (this.changeNumberByWord(current % base));
+                current = Math.trunc(current / base);
+            }
+        }
+        return result.split('').reverse().join('');
+    };
+    HomePage.prototype.numToDec = function (n, base) {
+        var binNumber = String(n);
+        var sum = 0;
+        for (var index = 0; index < binNumber.length; index++) {
+            var currentValue = 0;
+            if (base == 16) {
+                currentValue = this.changeWordByNumber(binNumber.charAt(index));
+            }
+            else {
+                currentValue = Number(binNumber.charAt(index));
+            }
+            // calc expo
+            var expo = currentValue * Math.pow(base, ((binNumber.length - 1) - index));
+            // soma dos multiplos
+            sum = sum + expo;
+        }
+        return sum;
+    };
+    HomePage.prototype.changeWordByNumber = function (value) {
+        if (value == 'A' || value == 'a') {
+            return 10;
+        }
+        else if (value == 'B' || value == 'b') {
+            return 11;
+        }
+        else if (value == 'C' || value == 'c') {
+            return 12;
+        }
+        else if (value == 'D' || value == 'd') {
+            return 13;
+        }
+        else if (value == 'E' || value == 'e') {
+            return 14;
+        }
+        else if (value == 'F' || value == 'f') {
+            return 15;
+        }
+        return Number(value);
+    };
+    HomePage.prototype.changeNumberByWord = function (value) {
+        if (value == 10) {
+            return 'A';
+        }
+        else if (value == 11) {
+            return 'B';
+        }
+        else if (value == 12) {
+            return 'C';
+        }
+        else if (value == 13) {
+            return 'D';
+        }
+        else if (value == 14) {
+            return 'E';
+        }
+        else if (value == 15) {
+            return 'F';
+        }
+        else {
+            return String(value);
         }
     };
     return HomePage;
 }());
 HomePage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-home',template:/*ion-inline-start:"/home/iury/ionic-workspace/binac/src/pages/home/home.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>Conversão de Bases</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <h3>Escolha a base de entrada:</h3>\n  <ion-item>\n    <ion-label>Base de Entrada</ion-label>\n    <ion-select [(ngModel)]="selectedOption" cancelText="VOLTAR" okText="OK" (ionChange)="selectClick()" interface="popover">\n      <ion-option value="bin">Binário (2)</ion-option>\n      <ion-option value="oct">Octal (8)</ion-option>\n      <ion-option value="dec">Decimal (10)</ion-option>\n      <ion-option value="hex">Hexa (16)</ion-option>\n    </ion-select>\n  </ion-item>\n\n  <ion-list>\n    <ion-item>\n      <ion-label color="primary" floating>{{labelField}}</ion-label>\n      <ion-input [(ngModel)]="ipNumber" disabled="{{inpState}}" type="text"></ion-input>\n    </ion-item>\n\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"/home/iury/ionic-workspace/binac/src/pages/home/home.html"*/
+        selector: 'page-home',template:/*ion-inline-start:"/home/iury/ionic-workspace/binac/src/pages/home/home.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>Conversão de Bases</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <h4>Escolha a base de entrada:</h4>\n  <ion-item>\n    <ion-label>Base de Entrada</ion-label>\n    <ion-select [(ngModel)]="selectedOption" cancelText="VOLTAR" okText="OK" (ionChange)="selectClick()" interface="popover">\n      <ion-option value="bin">Binário (2)</ion-option>\n      <ion-option value="oct">Octal (8)</ion-option>\n      <ion-option value="dec">Decimal (10)</ion-option>\n      <ion-option value="hex">Hexa (16)</ion-option>\n    </ion-select>\n  </ion-item>\n\n  <ion-list>\n    <ion-item>\n      <ion-label color="primary" floating>{{labelField}}</ion-label>\n      <ion-input [(ngModel)]="textNumber" disabled="{{inpState}}" type="text"></ion-input>\n    </ion-item>\n\n  </ion-list>\n  <button ion-button block (click)="convert()" icon-left>\n      <ion-icon name="calculator"></ion-icon>\n      Converter\n  </button>\n  <ion-list>\n    <ion-list-header>\n      <h1>Resultados</h1>\n    </ion-list-header>\n    <ion-item>\n      <h2>Binário</h2>\n      <h2>{{results?.bin}}</h2>\n    </ion-item>\n    <ion-item>\n      <h2>Octal</h2>\n      <h2>{{results?.oct}}</h2>\n    </ion-item>\n    <ion-item>\n      <h2>Decimal</h2>\n      <h2>{{results?.dec}}</h2>\n    </ion-item>\n    <ion-item>\n      <h2>Hex</h2>\n      <h2>{{results?.hex}}</h2>\n    </ion-item>\n  </ion-list>\n</ion-content>'/*ion-inline-end:"/home/iury/ionic-workspace/binac/src/pages/home/home.html"*/
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* NavController */]) === "function" && _a || Object])
 ], HomePage);
+
+var ResultNumbers = (function () {
+    function ResultNumbers() {
+        this.bin = 0;
+        this.oct = 0;
+        this.dec = 0;
+        this.hex = '0';
+    }
+    return ResultNumbers;
+}());
 
 var _a;
 //# sourceMappingURL=home.js.map
