@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { ToastController } from 'ionic-angular';
+import { LoadingController } from 'ionic-angular';
 
 @Component({
   selector: 'page-home',
@@ -13,7 +15,9 @@ export class HomePage {
   inpState: boolean = true;
   results: ResultNumbers;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, 
+    public toastCtrl:ToastController,
+    public loadingCtrl:LoadingController) {
 
   }
 
@@ -47,41 +51,60 @@ export class HomePage {
 
 
   convert() {
-    this.results = new ResultNumbers();
-    var n = this.textNumber;
+    if (this.textNumber){
 
-    if (this.selectedOption == 'bin') {
-      var decValue = this.numToDec(Number(n), 2);
+      let loader = this.loadingCtrl.create({
+        content: "Calculando..."
+      });
+      loader.present();
 
-      this.results.bin = Number(n);
+      this.results = new ResultNumbers();
+      var n = this.textNumber;
+      var decValue = null;
+      if (this.selectedOption == 'bin') {
+        decValue = this.numToDec(Number(n), 2);
 
-      this.results.dec = decValue;
-      this.results.oct = Number(this.decToBase(decValue, 8));
-      this.results.hex = this.decToBase(decValue, 16);
-    }
+        this.results.bin = Number(n);
 
-    if (this.selectedOption == 'oct') {
-      var decValue = this.numToDec(Number(n), 8);
-      this.results.oct = Number(n);
-      this.results.bin = Number(this.decToBase(decValue, 2));
-      this.results.dec = decValue;
-      this.results.hex = this.decToBase(decValue, 16);
-    }
+        this.results.dec = decValue;
+        this.results.oct = Number(this.decToBase(decValue, 8));
+        this.results.hex = this.decToBase(decValue, 16);
+      }
 
-    if (this.selectedOption == 'hex') {
-      var decValue = this.numToDec(n, 16);
-      this.results.hex = String(n).toUpperCase();
-      this.results.bin = Number(this.decToBase(decValue, 2));
-      this.results.oct = Number(this.decToBase(decValue, 8));
-      this.results.dec = decValue;
-    }
+      if (this.selectedOption == 'oct') {
+        decValue = this.numToDec(Number(n), 8);
+        this.results.oct = Number(n);
+        this.results.bin = Number(this.decToBase(decValue, 2));
+        this.results.dec = decValue;
+        this.results.hex = this.decToBase(decValue, 16);
+      }
 
-    if (this.selectedOption == 'dec') {
-      var vdec = Number(n);
-      this.results.bin = Number(this.decToBase(vdec, 2));
-      this.results.oct = Number(this.decToBase(vdec, 8));
-      this.results.dec = vdec;
-      this.results.hex = this.decToBase(vdec, 16);
+      if (this.selectedOption == 'hex') {
+        decValue = this.numToDec(n, 16);
+        this.results.hex = String(n).toUpperCase();
+        this.results.bin = Number(this.decToBase(decValue, 2));
+        this.results.oct = Number(this.decToBase(decValue, 8));
+        this.results.dec = decValue;
+      }
+
+      if (this.selectedOption == 'dec') {
+        var vdec = Number(n);
+        this.results.bin = Number(this.decToBase(vdec, 2));
+        this.results.oct = Number(this.decToBase(vdec, 8));
+        this.results.dec = vdec;
+        this.results.hex = this.decToBase(vdec, 16);
+      }
+
+      loader.dismiss();
+
+    }else{
+      //send alert message(toast)
+      let toast = this.toastCtrl.create({
+        message: 'Informe um número para ser convertido!',
+        duration: 3000,
+        position: 'top'
+      });
+      toast.present();
     }
   }
 

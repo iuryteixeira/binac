@@ -2,5 +2,7 @@
   "name": "binac",
   "app_id": "f84817cc",
   "type": "ionic-angular",
-  "integrations": {}
+  "integrations": {
+    "cordova": {}
+  }
 }
